@@ -4,37 +4,60 @@
     <meta charset="UTF-8">
     <title>중서부 한미노회 위원회 조직 관리 폼</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 자동 높이 조절 텍스트에어리어 스타일 */
+        .auto-resize {
+            overflow: hidden;
+            resize: none;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen p-6">
-    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-8">
+<body class="bg-gray-50 min-h-screen p-4 md:p-6">
+    <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-xl p-6 md:p-8">
         <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">중서부 한미노회 위원회 조직 관리 시스템</h1>
 
-        <!-- 상단 임원회, 대회/총회 총대 영역 -->
-        <div class="mb-8 bg-blue-50 p-6 rounded-lg border border-blue-100">
-            <h2 class="text-lg font-semibold text-blue-900 mb-4">📌 임원회 및 총대진 (직책: 성명 형식)</h2>
-            <div id="executives-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- 상단 임원회 및 총대진 영역 -->
+        <div class="mb-8 bg-blue-50 p-5 rounded-lg border border-blue-100">
+            <h2 class="text-base font-semibold text-blue-900 mb-3">📌 임원회 및 총대진</h2>
+            
+            <!-- 임원진 한 라인 배치 -->
+            <div class="mb-4">
+                <span class="text-xs font-bold text-gray-600 block mb-1">■ 임원회 (고정)</span>
+                <div id="executives-line-1" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                    <!-- 자바스크립트로 동적 생성됨 -->
+                </div>
+            </div>
+
+            <!-- 대회총대, 총회총대 배치 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-blue-200" id="executives-line-2">
                 <!-- 자바스크립트로 동적 생성됨 -->
             </div>
-            <button onclick="addExecutiveField()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition">+ 항목 추가</button>
         </div>
 
-        <!-- 위원회 조직표 영역 -->
-        <div class="mb-6 flex justify-between items-center">
-            <h2 class="text-lg font-semibold text-gray-800">📋 위원회별 연도별 명단 조직표</h2>
+        <!-- 위원회 조직표 영역 상단 버튼 -->
+        <div class="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <h2 class="text-lg font-semibold text-gray-800">📋 위원회별 조직표 관리</h2>
             <div class="space-x-2">
                 <button onclick="saveData()" class="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700 transition">저장하기</button>
                 <button onclick="resetData()" class="bg-gray-500 text-white px-4 py-2 rounded text-sm hover:bg-gray-600 transition">기본값 복원</button>
             </div>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse border border-gray-300 text-sm">
+        <!-- 위원회 조직표 테이블 -->
+        <div class="w-full">
+            <table class="w-full border-collapse border border-gray-300 text-sm table-fixed">
                 <thead>
                     <tr class="bg-gray-100 text-gray-700">
-                        <th class="border border-gray-300 p-3 w-1/5">위원회 명칭</th>
-                        <th class="border border-gray-300 p-3 w-1/4">2026년조 (1년)</th>
-                        <th class="border border-gray-300 p-3 w-1/4">2027년조 (2년)</th>
-                        <th class="border border-gray-300 p-3 w-1/4">2028년조 (3년) / 기타</th>
+                        <th class="border border-gray-300 p-2 w-[16%] text-center">위원회 명칭</th>
+                        <th class="border border-gray-300 p-2 w-[28%] text-center">
+                            <input type="text" id="col-title-1" class="w-full text-center font-semibold bg-transparent border-b border-gray-400 focus:outline-none" value="2026년조 (1년)">
+                        </th>
+                        <th class="border border-gray-300 p-2 w-[28%] text-center">
+                            <input type="text" id="col-title-2" class="w-full text-center font-semibold bg-transparent border-b border-gray-400 focus:outline-none" value="2027년조 (2년)">
+                        </th>
+                        <th class="border border-gray-300 p-2 w-[28%] text-center">
+                            <input type="text" id="col-title-3" class="w-full text-center font-semibold bg-transparent border-b border-gray-400 focus:outline-none" value="2028년조 (3년) / 기타">
+                        </th>
                     </tr>
                 </thead>
                 <tbody id="committee-table-body">
@@ -47,15 +70,20 @@
     <script>
         // 초기 데이터 (첨부파일 기반)
         const initialData = {
+            columnTitles: {
+                col1: "2026년조 (1년)",
+                col2: "2027년조 (2년)",
+                col3: "2028년조 (3년) / 기타"
+            },
             executives: [
-                { title: "노회장", name: "황종언 목사" },
-                { title: "부노회장", name: "하정헌 장로" },
-                { title: "사무총장", name: "최병훈 목사" },
-                { title: "정서기", name: "이성은 목사" },
-                { title: "재무", name: "이윤종 장로" },
-                { title: "회록서기", name: "박희준 장로" },
-                { title: "대회총대", name: "이성은 목사(26), 임인근 장로(27), 김대환 목사(28)" },
-                { title: "총회총대", name: "김응두 장로, 정지훈 목사(2026-2027)" }
+                { title: "노회장", name: "황종언 목사", fixed: true },
+                { title: "부노회장", name: "하정헌 장로", fixed: true },
+                { title: "사무총장", name: "최병훈 목사", fixed: true },
+                { title: "정서기", name: "이성은 목사", fixed: true },
+                { title: "재무", name: "이윤종 장로", fixed: true },
+                { title: "회록서기", name: "박희준 장로", fixed: true },
+                { title: "대회총대", name: "이성은 목사(26), 임인근 장로(27), 김대환 목사(28)", fixed: false },
+                { title: "총회총대", name: "김응두 장로, 정지훈 목사(2026-2027)", fixed: false }
             ],
             committees: [
                 {
@@ -116,88 +144,119 @@
         };
 
         function loadData() {
-            const saved = localStorage.getItem('nohe_data');
+            const saved = localStorage.getItem('nohe_data_v2');
             return saved ? JSON.parse(saved) : initialData;
+        }
+
+        function autoResizeTextarea(el) {
+            el.style.height = 'auto';
+            el.style.height = (el.scrollHeight + 4) + 'px';
         }
 
         function renderForm() {
             const data = loadData();
 
-            // 1. 임원진 렌더링
-            const execContainer = document.getElementById('executives-container');
-            execContainer.innerHTML = '';
-            data.executives.forEach((exec, index) => {
-                execContainer.innerHTML += `
-                    <div class="flex items-center space-x-2 bg-white p-3 rounded border border-gray-200 shadow-sm">
-                        <input type="text" value="${exec.title}" placeholder="직책 (예: 노회장)" class="exec-title border p-1.5 rounded w-1/3 text-sm font-medium bg-gray-50" onchange="updateExecutive(${index})">
-                        <span class="text-gray-500">:</span>
-                        <input type="text" value="${exec.name}" placeholder="이름 및 소속" class="exec-name border p-1.5 rounded w-full text-sm" onchange="updateExecutive(${index})">
-                        <button onclick="removeExecutive(${index})" class="text-red-500 hover:text-red-700 px-2 font-bold">×</button>
+            // 타이틀 반영
+            if(data.columnTitles) {
+                document.getElementById('col-title-1').value = data.columnTitles.col1 || "2026년조 (1년)";
+                document.getElementById('col-title-2').value = data.columnTitles.col2 || "2027년조 (2년)";
+                document.getElementById('col-title-3').value = data.columnTitles.col3 || "2028년조 (3년) / 기타";
+            }
+
+            // 1. 임원진 렌더링 (노회장 ~ 회록서기 1라인)
+            const line1Container = document.getElementById('executives-line-1');
+            line1Container.innerHTML = '';
+            data.executives.slice(0, 6).forEach((exec, index) => {
+                line1Container.innerHTML += `
+                    <div class="bg-white p-2 rounded border border-blue-200 shadow-sm flex flex-col justify-between">
+                        <span class="text-[11px] font-bold text-blue-800">${exec.title}</span>
+                        <input type="text" value="${exec.name}" class="exec-name border-b border-transparent hover:border-gray-300 focus:border-blue-500 p-0.5 rounded text-xs mt-1 w-full bg-transparent focus:bg-white" data-index="${index}" onchange="updateExecutive(${index})">
                     </div>
                 `;
             });
 
-            // 2. 위원회 조직표 렌더링
+            // 2. 총대진 렌더링 (대회총대, 총회총대 2라인)
+            const line2Container = document.getElementById('executives-line-2');
+            line2Container.innerHTML = '';
+            data.executives.slice(6, 8).forEach((exec, idx) => {
+                const index = idx + 6;
+                line2Container.innerHTML += `
+                    <div class="bg-white p-2.5 rounded border border-blue-200 shadow-sm flex items-center space-x-2">
+                        <span class="text-xs font-bold text-blue-800 w-20 shrink-0">${exec.title}:</span>
+                        <input type="text" value="${exec.name}" class="exec-name border-b border-transparent hover:border-gray-300 focus:border-blue-500 p-1 rounded text-xs w-full bg-transparent focus:bg-white" data-index="${index}" onchange="updateExecutive(${index})">
+                    </div>
+                `;
+            });
+
+            // 3. 위원회 조직표 렌더링 (한 줄에 2명씩 보이도록 2열 그리드 적용)
             const tableBody = document.getElementById('committee-table-body');
             tableBody.innerHTML = '';
             data.committees.forEach((comm, index) => {
                 tableBody.innerHTML += `
                     <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 p-3 font-semibold bg-gray-50 text-gray-700 align-top">
+                        <td class="border border-gray-300 p-2 font-semibold bg-gray-50 text-gray-700 text-center align-middle text-xs md:text-sm">
                             ${comm.name}
                         </td>
-                        <td class="border border-gray-300 p-2 align-top">
-                            <textarea rows="4" class="w-full border p-2 rounded text-xs comm-input" data-index="${index}" data-col="col1">${comm.col1}</textarea>
+                        <td class="border border-gray-300 p-1.5 align-top">
+                            <textarea class="w-full border p-1.5 rounded text-xs comm-input auto-resize grid grid-cols-1 sm:grid-cols-2 gap-1" data-index="${index}" data-col="col1" oninput="autoResizeTextarea(this)">${comm.col1}</textarea>
                         </td>
-                        <td class="border border-gray-300 p-2 align-top">
-                            <textarea rows="4" class="w-full border p-2 rounded text-xs comm-input" data-index="${index}" data-col="col2">${comm.col2}</textarea>
+                        <td class="border border-gray-300 p-1.5 align-top">
+                            <textarea class="w-full border p-1.5 rounded text-xs comm-input auto-resize grid grid-cols-1 sm:grid-cols-2 gap-1" data-index="${index}" data-col="col2" oninput="autoResizeTextarea(this)">${comm.col2}</textarea>
                         </td>
-                        <td class="border border-gray-300 p-2 align-top">
-                            <textarea rows="4" class="w-full border p-2 rounded text-xs comm-input" data-index="${index}" data-col="col3">${comm.col3}</textarea>
+                        <td class="border border-gray-300 p-1.5 align-top">
+                            <textarea class="w-full border p-1.5 rounded text-xs comm-input auto-resize grid grid-cols-1 sm:grid-cols-2 gap-1" data-index="${index}" data-col="col3" oninput="autoResizeTextarea(this)">${comm.col3}</textarea>
                         </td>
                     </tr>
                 `;
             });
+
+            // 생성된 텍스트에어리어 높이 자동 조절 적용
+            setTimeout(() => {
+                document.querySelectorAll('.auto-resize').forEach(textarea => {
+                    autoResizeTextarea(textarea);
+                });
+            }, 50);
         }
 
         function updateExecutive(index) {
             const data = loadData();
-            const container = document.getElementById('executives-container');
-            const rows = container.children;
-            data.executives[index].title = rows[index].querySelector('.exec-title').value;
-            data.executives[index].name = rows[index].querySelector('.exec-name').value;
-            localStorage.setItem('nohe_data', JSON.stringify(data));
-        }
-
-        function addExecutiveField() {
-            const data = loadData();
-            data.executives.push({ title: "직책", name: "이름" });
-            localStorage.setItem('nohe_data', JSON.stringify(data));
-            renderForm();
-        }
-
-        function removeExecutive(index) {
-            const data = loadData();
-            data.executives.splice(index, 1);
-            localStorage.setItem('nohe_data', JSON.stringify(data));
-            renderForm();
+            const input = document.querySelector(`.exec-name[data-index="${index}"]`);
+            if (input) {
+                data.executives[index].name = input.value;
+                localStorage.setItem('nohe_data_v2', JSON.stringify(data));
+            }
         }
 
         function saveData() {
             const data = loadData();
-            // 텍스트에어리어 값들 수집
+            
+            // 상단 타이틀 수집
+            data.columnTitles = {
+                col1: document.getElementById('col-title-1').value,
+                col2: document.getElementById('col-title-2').value,
+                col3: document.getElementById('col-title-3').value
+            };
+
+            // 임원진 수집
+            document.querySelectorAll('.exec-name').forEach(input => {
+                const index = input.getAttribute('data-index');
+                data.executives[index].name = input.value;
+            });
+
+            // 위원회 명단 수집
             document.querySelectorAll('.comm-input').forEach(textarea => {
                 const index = textarea.getAttribute('data-index');
                 const col = textarea.getAttribute('data-col');
                 data.committees[index][col] = textarea.value;
             });
-            localStorage.setItem('nohe_data', JSON.stringify(data));
+
+            localStorage.setItem('nohe_data_v2', JSON.stringify(data));
             alert('성공적으로 저장되었습니다! 브라우저를 닫아도 내용이 유지됩니다.');
         }
 
         function resetData() {
             if (confirm('모든 내용을 초기 기본값으로 되돌리시겠습니까?')) {
-                localStorage.removeItem('nohe_data');
+                localStorage.removeItem('nohe_data_v2');
                 renderForm();
                 alert('초기화되었습니다.');
             }
