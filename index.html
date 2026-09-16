@@ -5,7 +5,6 @@
     <title>중서부 한미노회 위원회 조직 관리 폼</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 자동 높이 조절 텍스트에어리어 스타일 */
         .auto-resize {
             overflow: hidden;
             resize: none;
@@ -13,29 +12,29 @@
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen p-4 md:p-6">
-    <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-xl p-6 md:p-8">
+    <div class="max-w-[95%] mx-auto bg-white shadow-lg rounded-xl p-6">
         <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">중서부 한미노회 위원회 조직 관리 시스템</h1>
 
         <!-- 상단 임원회 및 총대진 영역 -->
         <div class="mb-8 bg-blue-50 p-5 rounded-lg border border-blue-100">
             <h2 class="text-base font-semibold text-blue-900 mb-3">📌 임원회 및 총대진</h2>
             
-            <!-- 임원진 한 라인 배치 -->
+            <!-- 임원진 한 라인 가로 나열 -->
             <div class="mb-4">
                 <span class="text-xs font-bold text-gray-600 block mb-1">■ 임원회 (고정)</span>
-                <div id="executives-line-1" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                <div id="executives-line-1" class="flex flex-wrap gap-2">
                     <!-- 자바스크립트로 동적 생성됨 -->
                 </div>
             </div>
 
             <!-- 대회총대, 총회총대 배치 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-blue-200" id="executives-line-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-3 border-t border-blue-200" id="executives-line-2">
                 <!-- 자바스크립트로 동적 생성됨 -->
             </div>
         </div>
 
         <!-- 위원회 조직표 영역 상단 버튼 -->
-        <div class="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <div class="mb-4 flex justify-between items-center">
             <h2 class="text-lg font-semibold text-gray-800">📋 위원회별 조직표 관리</h2>
             <div class="space-x-2">
                 <button onclick="saveData()" class="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700 transition">저장하기</button>
@@ -44,15 +43,15 @@
         </div>
 
         <!-- 위원회 조직표 테이블 -->
-        <div class="w-full">
-            <table class="w-full border-collapse border border-gray-300 text-sm table-fixed">
+        <div class="w-full overflow-x-hidden">
+            <table class="w-full border-collapse border border-gray-300 text-sm">
                 <thead>
                     <tr class="bg-gray-100 text-gray-700">
-                        <th class="border border-gray-300 p-2 w-[16%] text-center">위원회 명칭</th>
-                        <th class="border border-gray-300 p-2 w-[28%] text-center">
+                        <th class="border border-gray-300 p-2 w-[14%] text-center">위원회 명칭</th>
+                        <th class="border border-gray-300 p-2 w-[29%] text-center">
                             <input type="text" id="col-title-1" class="w-full text-center font-semibold bg-transparent border-b border-gray-400 focus:outline-none" value="2026년조 (1년)">
                         </th>
-                        <th class="border border-gray-300 p-2 w-[28%] text-center">
+                        <th class="border border-gray-300 p-2 w-[29%] text-center">
                             <input type="text" id="col-title-2" class="w-full text-center font-semibold bg-transparent border-b border-gray-400 focus:outline-none" value="2027년조 (2년)">
                         </th>
                         <th class="border border-gray-300 p-2 w-[28%] text-center">
@@ -68,7 +67,6 @@
     </div>
 
     <script>
-        // 초기 데이터 (첨부파일 기반)
         const initialData = {
             columnTitles: {
                 col1: "2026년조 (1년)",
@@ -76,75 +74,89 @@
                 col3: "2028년조 (3년) / 기타"
             },
             executives: [
-                { title: "노회장", name: "황종언 목사", fixed: true },
-                { title: "부노회장", name: "하정헌 장로", fixed: true },
-                { title: "사무총장", name: "최병훈 목사", fixed: true },
-                { title: "정서기", name: "이성은 목사", fixed: true },
-                { title: "재무", name: "이윤종 장로", fixed: true },
-                { title: "회록서기", name: "박희준 장로", fixed: true },
-                { title: "대회총대", name: "이성은 목사(26), 임인근 장로(27), 김대환 목사(28)", fixed: false },
-                { title: "총회총대", name: "김응두 장로, 정지훈 목사(2026-2027)", fixed: false }
+                { title: "노회장", name: "황종언 목사" },
+                { title: "부노회장", name: "하정헌 장로" },
+                { title: "사무총장", name: "최병훈 목사" },
+                { title: "정서기", name: "이성은 목사" },
+                { title: "재무", name: "이윤종 장로" },
+                { title: "회록서기", name: "박희준 장로" },
+                { title: "대회총대", name: "이성은 목사(26), 임인근 장로(27), 김대환 목사(28)" },
+                { title: "총회총대", name: "김응두 장로, 정지훈 목사(2026-2027)" }
             ],
             committees: [
                 {
                     name: "공천",
-                    col1: "유원하 목사(한사랑복음)\n김용두 장로(미드웨스트)\n문진규 장로(연합)\n박규완 목사(레익뷰)\n류한국 목사(베다니)\n임채석 장로(언약)",
-                    col2: "류승열 장로(한미)\n김대환 목사(연합)\n박인천 목사(한마음)",
-                    col3: ""
+                    col1_left: "유원하 목사(한사랑복음)\n문진규 장로(연합)\n류한국 목사(베다니)",
+                    col1_right: "김용두 장로(미드웨스트)\n박규완 목사(레익뷰)\n임채석 장로(언약)",
+                    col2_left: "류승열 장로(한미)\n박인천 목사(한마음)",
+                    col2_right: "김대환 목사(연합)",
+                    col3_left: "", col3_right: ""
                 },
                 {
                     name: "교육 및 목사후보생 (CPM)",
-                    col1: "전상현 목사(미드웨스트)\nLuke Shin 목사(기도의 집)\n김승규 장로(연합)***\n김영문 목사(새닐)\n이선비 장로(한사랑복음)\n표경진 장로(두나미스)",
-                    col2: "이강산 목사(로렌스)\n황광연 장로(언약)\n하승민 목사(한사랑복음)",
-                    col3: ""
+                    col1_left: "전상현 목사(미드웨스트)\n김승규 장로(연합)***\n이선비 장로(한사랑복음)",
+                    col1_right: "Luke Shin 목사(기도의 집)\n김영문 목사(새닐)\n표경진 장로(두나미스)",
+                    col2_left: "이강산 목사(로렌스)\n하승민 목사(한사랑복음)",
+                    col2_right: "황광연 장로(언약)",
+                    col3_left: "", col3_right: ""
                 },
                 {
                     name: "목회 (COM)",
-                    col1: "권효섭 장로(언약)\n김우창 목사(새계명)\n김지석 목사(충만)\n유재오 장로(레익뷰)\n정철환 장로(새날)\n변해성 목사(올네이션스)",
-                    col2: "이태명 장로(필복)\n조은성 목사(연합)\n최정수 목사(한미)",
-                    col3: ""
+                    col1_left: "권효섭 장로(언약)\n김지석 목사(충만)\n정철환 장로(새날)",
+                    col1_right: "김우창 목사(새계명)\n유재오 장로(레익뷰)\n변해성 목사(올네이션스)",
+                    col2_left: "이태명 장로(필복)\n최정수 목사(한미)",
+                    col2_right: "조은성 목사(연합)",
+                    col3_left: "", col3_right: ""
                 },
                 {
                     name: "법인 이사회",
-                    col1: "권성준 장로(한미)\n민병선 장로(레익뷰)\n박인혁 목사(은퇴)\n김영재 장로(새날)\n강상원 장로(한사랑복음)\n이호영 장로(미드웨스트)\nRich Kim 목사(두나미스)\n정지훈 목사(필복)\n박정호 목사(하나*)",
-                    col2: "채복기 목사(은퇴)\n이순옥 목사(준회원)",
-                    col3: "이만석 목사(은퇴)\n김광수 목사(기도의 집)\n고훈 목사(한미)\n\n[김우종 장로 외]\n김우종 장로(한미)\n정형식 장로(새날)\n류정선 장로(한마음)"
+                    col1_left: "권성준 장로(한미)\n박인혁 목사(은퇴)\n강상원 장로(한사랑복음)\nRich Kim 목사(두나미스)\n박정호 목사(하나*)",
+                    col1_right: "민병선 장로(레익뷰)\n김영재 장로(새날)\n이호영 장로(미드웨스트)\n정지훈 목사(필복)",
+                    col2_left: "채복기 목사(은퇴)",
+                    col2_right: "이순옥 목사(준회원)",
+                    col3_left: "이만석 목사(은퇴)\n고훈 목사(한미)\n김우종 장로(한미)\n류정선 장로(한마음)",
+                    col3_right: "김광수 목사(기도의 집)\n정형식 장로(새날)"
                 },
                 {
                     name: "선교 및 교회 발전",
-                    col1: "이민구 장로(미드웨스트)\n이신민 목사(언약)\n정환곤 장로(블루/노밀)",
-                    col2: "허광영 장로(두나미스)\n오상환 장로(베다니)\n이덕진 장로(연합)",
-                    col3: "Sean Kim 목사(기도의 집)\n곽영탁 장로(베다니)\n김윤민 목사(언약)\n곽철 목사(은퇴)\n노재왕 목사(VM)\n윤자명 장로(언약)"
+                    col1_left: "이민구 장로(미드웨스트)\n정환곤 장로(블루/노밀)",
+                    col1_right: "이신민 목사(언약)",
+                    col2_left: "허광영 장로(두나미스)\n이덕진 장로(연합)",
+                    col2_right: "오상환 장로(베다니)",
+                    col3_left: "Sean Kim 목사(기도의 집)\n김윤민 목사(언약)\n노재왕 목사(VM)",
+                    col3_right: "곽영탁 장로(베다니)\n곽철 목사(은퇴)\n윤자명 장로(언약)"
                 },
                 {
                     name: "대표 및 정책 기록",
-                    col1: "이선호 장로(연합)\n박중현 목사(한미)**\n서형태 장로(두나미스)\n유한성 목사(락포드)\n전윤수 장로(연합)\n조진호 장로(블루/노말)\n이근용 장로(한사랑복음)\n김혜순 장로(한미)\n임인근 장로(두나미스)",
-                    col2: "임채석 장로(언약, 26)\n이만석 목사(은퇴,27)\n김응두 장로(미드웨스트, 27)\n박인혁 목사(은퇴,28)",
-                    col3: ""
+                    col1_left: "이선호 장로(연합)\n서형태 장로(두나미스)\n전윤수 장로(연합)\n이근용 장로(한사랑복음)\n임인근 장로(두나미스)",
+                    col1_right: "박중현 목사(한미)**\n유한성 목사(락포드)\n조진호 장로(블루/노말)\n김혜순 장로(한미)",
+                    col2_left: "임채석 장로(언약, 26)\n김응두 장로(미드웨스트, 27)",
+                    col2_right: "이만석 목사(은퇴,27)\n박인혁 목사(은퇴,28)",
+                    col3_left: "", col3_right: ""
                 },
                 {
                     name: "상임 사법 전권",
-                    col1: "함은경 장로(한미, 28)\n김지석 목사(충만, 29)\n김우년 장로(연합,29)\n박규완 목사(레익뷰,30)\n전상현 목사(미드웨스트,30)\n임문상 장로(베다니,30)\n유원하 목사(은퇴,31)\n곽철 목사(은퇴,32)",
-                    col2: "",
-                    col3: ""
+                    col1_left: "함은경 장로(한미, 28)\n김우년 장로(연합,29)\n전상현 목사(미드웨스트,30)\n유원하 목사(은퇴,31)",
+                    col1_right: "김지석 목사(충만, 29)\n박규완 목사(레익뷰,30)\n임문상 장로(베다니,30)\n곽철 목사(은퇴,32)",
+                    col2_left: "", col2_right: "", col3_left: "", col3_right: ""
                 },
                 {
                     name: "준회원(MAL)",
-                    col1: "천서희 목사\n노은철 목사(늘푸른)\n김성환 목사\n이봉헌 목사",
-                    col2: "",
-                    col3: ""
+                    col1_left: "천서희 목사\n김성환 목사",
+                    col1_right: "노은철 목사(늘푸른)\n이봉헌 목사",
+                    col2_left: "", col2_right: "", col3_left: "", col3_right: ""
                 },
                 {
                     name: "총회, 해외",
-                    col1: "송진우(한국)\n원상영(육군군목)\n이철원 목사(은퇴이주)\n신현정(은퇴)\n송금섭(은퇴선교)\n유승원(은퇴한국)\n이종형(은퇴이주)\n고광문 목사(VM)\n김삼영 목사(총회)",
-                    col2: "",
-                    col3: ""
+                    col1_left: "송진우(한국)\n이철원 목사(은퇴이주)\n송금섭(은퇴선교)\n이종형(은퇴이주)\n김삼영 목사(총회)",
+                    col1_right: "원상영(육군군목)\n신현정(은퇴)\n유승원(은퇴한국)\n고광문 목사(VM)",
+                    col2_left: "", col2_right: "", col3_left: "", col3_right: ""
                 }
             ]
         };
 
         function loadData() {
-            const saved = localStorage.getItem('nohe_data_v2');
+            const saved = localStorage.getItem('nohe_data_v3');
             return saved ? JSON.parse(saved) : initialData;
         }
 
@@ -156,26 +168,25 @@
         function renderForm() {
             const data = loadData();
 
-            // 타이틀 반영
             if(data.columnTitles) {
                 document.getElementById('col-title-1').value = data.columnTitles.col1 || "2026년조 (1년)";
                 document.getElementById('col-title-2').value = data.columnTitles.col2 || "2027년조 (2년)";
                 document.getElementById('col-title-3').value = data.columnTitles.col3 || "2028년조 (3년) / 기타";
             }
 
-            // 1. 임원진 렌더링 (노회장 ~ 회록서기 1라인)
+            // 1. 임원진 가로 한 줄 나열
             const line1Container = document.getElementById('executives-line-1');
             line1Container.innerHTML = '';
             data.executives.slice(0, 6).forEach((exec, index) => {
                 line1Container.innerHTML += `
-                    <div class="bg-white p-2 rounded border border-blue-200 shadow-sm flex flex-col justify-between">
-                        <span class="text-[11px] font-bold text-blue-800">${exec.title}</span>
-                        <input type="text" value="${exec.name}" class="exec-name border-b border-transparent hover:border-gray-300 focus:border-blue-500 p-0.5 rounded text-xs mt-1 w-full bg-transparent focus:bg-white" data-index="${index}" onchange="updateExecutive(${index})">
+                    <div class="bg-white px-3 py-1.5 rounded border border-blue-200 shadow-sm flex items-center space-x-1.5 flex-grow">
+                        <span class="text-xs font-bold text-blue-800 shrink-0">${exec.title}:</span>
+                        <input type="text" value="${exec.name}" class="exec-name border-b border-transparent hover:border-gray-300 focus:border-blue-500 p-0.5 rounded text-xs w-full bg-transparent focus:bg-white" data-index="${index}" onchange="updateExecutive(${index})">
                     </div>
                 `;
             });
 
-            // 2. 총대진 렌더링 (대회총대, 총회총대 2라인)
+            // 2. 총대진
             const line2Container = document.getElementById('executives-line-2');
             line2Container.innerHTML = '';
             data.executives.slice(6, 8).forEach((exec, idx) => {
@@ -188,7 +199,7 @@
                 `;
             });
 
-            // 3. 위원회 조직표 렌더링 (한 줄에 2명씩 보이도록 2열 그리드 적용)
+            // 3. 위원회 조직표 (각 조별 칸을 좌우 2개의 박스로 분할하여 2열 배치)
             const tableBody = document.getElementById('committee-table-body');
             tableBody.innerHTML = '';
             data.committees.forEach((comm, index) => {
@@ -197,20 +208,31 @@
                         <td class="border border-gray-300 p-2 font-semibold bg-gray-50 text-gray-700 text-center align-middle text-xs md:text-sm">
                             ${comm.name}
                         </td>
-                        <td class="border border-gray-300 p-1.5 align-top">
-                            <textarea class="w-full border p-1.5 rounded text-xs comm-input auto-resize grid grid-cols-1 sm:grid-cols-2 gap-1" data-index="${index}" data-col="col1" oninput="autoResizeTextarea(this)">${comm.col1}</textarea>
+                        <!-- 1열 (예: 2026년조) 좌우 분할 -->
+                        <td class="border border-gray-300 p-1 align-top">
+                            <div class="grid grid-cols-2 gap-1">
+                                <textarea class="w-full border p-1 rounded text-xs comm-input auto-resize" data-index="${index}" data-col="col1_left" oninput="autoResizeTextarea(this)">${comm.col1_left || ''}</textarea>
+                                <textarea class="w-full border p-1 rounded text-xs comm-input auto-resize" data-index="${index}" data-col="col1_right" oninput="autoResizeTextarea(this)">${comm.col1_right || ''}</textarea>
+                            </div>
                         </td>
-                        <td class="border border-gray-300 p-1.5 align-top">
-                            <textarea class="w-full border p-1.5 rounded text-xs comm-input auto-resize grid grid-cols-1 sm:grid-cols-2 gap-1" data-index="${index}" data-col="col2" oninput="autoResizeTextarea(this)">${comm.col2}</textarea>
+                        <!-- 2열 (예: 2027년조) 좌우 분할 -->
+                        <td class="border border-gray-300 p-1 align-top">
+                            <div class="grid grid-cols-2 gap-1">
+                                <textarea class="w-full border p-1 rounded text-xs comm-input auto-resize" data-index="${index}" data-col="col2_left" oninput="autoResizeTextarea(this)">${comm.col2_left || ''}</textarea>
+                                <textarea class="w-full border p-1 rounded text-xs comm-input auto-resize" data-index="${index}" data-col="col2_right" oninput="autoResizeTextarea(this)">${comm.col2_right || ''}</textarea>
+                            </div>
                         </td>
-                        <td class="border border-gray-300 p-1.5 align-top">
-                            <textarea class="w-full border p-1.5 rounded text-xs comm-input auto-resize grid grid-cols-1 sm:grid-cols-2 gap-1" data-index="${index}" data-col="col3" oninput="autoResizeTextarea(this)">${comm.col3}</textarea>
+                        <!-- 3열 (예: 2028년조) 좌우 분할 -->
+                        <td class="border border-gray-300 p-1 align-top">
+                            <div class="grid grid-cols-2 gap-1">
+                                <textarea class="w-full border p-1 rounded text-xs comm-input auto-resize" data-index="${index}" data-col="col3_left" oninput="autoResizeTextarea(this)">${comm.col3_left || ''}</textarea>
+                                <textarea class="w-full border p-1 rounded text-xs comm-input auto-resize" data-index="${index}" data-col="col3_right" oninput="autoResizeTextarea(this)">${comm.col3_right || ''}</textarea>
+                            </div>
                         </td>
                     </tr>
                 `;
             });
 
-            // 생성된 텍스트에어리어 높이 자동 조절 적용
             setTimeout(() => {
                 document.querySelectorAll('.auto-resize').forEach(textarea => {
                     autoResizeTextarea(textarea);
@@ -223,46 +245,42 @@
             const input = document.querySelector(`.exec-name[data-index="${index}"]`);
             if (input) {
                 data.executives[index].name = input.value;
-                localStorage.setItem('nohe_data_v2', JSON.stringify(data));
+                localStorage.setItem('nohe_data_v3', JSON.stringify(data));
             }
         }
 
         function saveData() {
             const data = loadData();
             
-            // 상단 타이틀 수집
             data.columnTitles = {
                 col1: document.getElementById('col-title-1').value,
                 col2: document.getElementById('col-title-2').value,
                 col3: document.getElementById('col-title-3').value
             };
 
-            // 임원진 수집
             document.querySelectorAll('.exec-name').forEach(input => {
                 const index = input.getAttribute('data-index');
                 data.executives[index].name = input.value;
             });
 
-            // 위원회 명단 수집
             document.querySelectorAll('.comm-input').forEach(textarea => {
                 const index = textarea.getAttribute('data-index');
                 const col = textarea.getAttribute('data-col');
                 data.committees[index][col] = textarea.value;
             });
 
-            localStorage.setItem('nohe_data_v2', JSON.stringify(data));
+            localStorage.setItem('nohe_data_v3', JSON.stringify(data));
             alert('성공적으로 저장되었습니다! 브라우저를 닫아도 내용이 유지됩니다.');
         }
 
         function resetData() {
             if (confirm('모든 내용을 초기 기본값으로 되돌리시겠습니까?')) {
-                localStorage.removeItem('nohe_data_v2');
+                localStorage.removeItem('nohe_data_v3');
                 renderForm();
                 alert('초기화되었습니다.');
             }
         }
 
-        // 페이지 로드시 렌더링
         window.onload = renderForm;
     </script>
 </body>
